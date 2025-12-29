@@ -19,11 +19,11 @@ document.body.insertAdjacentHTML("beforeend", `
   <input id="ai-chat-input" placeholder="Ask something..." />
 
   <button id="ai-mic-btn" class="circle-btn" title="Speak">
-    <img src="../chatbot/mic.png" alt="Mic">
+    <img src="https://raw.githubusercontent.com/rushity/rai-chatbot/main/assets/mic.png" alt="Mic">
   </button>
 
   <button id="ai-send-btn" class="circle-btn" title="Send">
-    <img src="../chatbot/send.png" alt="Send">
+    <img src="https://raw.githubusercontent.com/rushity/rai-chatbot/main/assets/send.png" alt="Send">
   </button>
 </div>
 
