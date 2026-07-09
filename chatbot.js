@@ -14,6 +14,9 @@
   document.body.appendChild(host);
 
   const shadow = host.attachShadow({ mode: "open" });
+  const markedScript = document.createElement("script");
+markedScript.src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+document.head.appendChild(markedScript);
 
   // load your EXISTING css (UNCHANGED)
   const style = document.createElement("style");
@@ -100,13 +103,62 @@
   }
 
   function addBotMessage(text) {
+
     const div = document.createElement("div");
     div.className = "chat-bubble ai-bot";
-    div.innerHTML = `<span class="rai-label">RAI:</span> ${text}`;
+
+    let html = text;
+
+    if (window.marked) {
+        html = marked.parse(text);
+    }
+
+    div.innerHTML = `
+        <span class="rai-label">RAI:</span>
+        <div class="rai-content">${html}</div>
+    `;
+
     msgs.appendChild(div);
     msgs.scrollTop = msgs.scrollHeight;
+
     return div;
-  }
+}
+
+ 
+
+async function typeBotMessage(text){
+
+    const div = document.createElement("div");
+    div.className = "chat-bubble ai-bot";
+
+    div.innerHTML = `
+        <span class="rai-label">RAI:</span>
+        <div class="rai-content"></div>
+    `;
+
+    msgs.appendChild(div);
+
+    const content = div.querySelector(".rai-content");
+
+    let current = "";
+
+    const speed = 10;
+
+    for(let i=0;i<text.length;i++){
+
+        current += text[i];
+
+        if(window.marked){
+            content.innerHTML = marked.parse(current);
+        }else{
+            content.textContent = current;
+        }
+
+        msgs.scrollTop = msgs.scrollHeight;
+
+        await new Promise(r=>setTimeout(r,speed));
+    }
+}
 
   function speakText(text) {
     if (!("speechSynthesis" in window)) return;
@@ -167,7 +219,15 @@
 
     const thinking = document.createElement("div");
     thinking.className = "chat-bubble ai-bot thinking";
-    thinking.innerHTML = `<span class="rai-label">RAI</span> is thinking`;
+    tthinking.innerHTML = `
+<span class="rai-label">RAI</span>
+
+<div class="thinking-dots">
+<span></span>
+<span></span>
+<span></span>
+</div>
+`;
     msgs.appendChild(thinking);
     msgs.scrollTop = msgs.scrollHeight;
 
@@ -180,8 +240,9 @@
       .then(data => {
         thinking.remove();
 
-        const reply = data.answer || "I couldn’t find an answer.";
-        addBotMessage(reply);
+       const reply = data.answer || "I couldn’t find an answer.";
+
+      typeBotMessage(reply);
 
         if (fromVoice === true) {
           speakText(reply);
