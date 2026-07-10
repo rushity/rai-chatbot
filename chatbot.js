@@ -38,7 +38,61 @@ document.head.appendChild(markedScript);
 </button>
 
 <div id="ai-chat-box">
-  <div id="ai-chat-header">RAI — AI Assistant</div>
+  <div id="ai-chat-header">
+
+    <div class="rai-header-left">
+
+       <div class="rai-avatar">
+    <span class="rai-avatar-text">R</span>
+</div>
+
+        <div class="rai-header-info">
+
+            <div class="rai-title">
+                RAI Assistant
+            </div>
+
+            <div class="rai-status">
+                <span class="online-dot"></span>
+                Online
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="rai-header-right">
+
+        <button id="rai-info-btn" class="header-btn" title="About RAI">
+
+            <svg viewBox="0 0 24 24" class="header-icon">
+                <path fill="currentColor"
+                d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 4a1.25 1.25 0 110 2.5A1.25 1.25 0 0112 6zm1.2 12h-2.4v-7h2.4v7z"/>
+            </svg>
+
+        </button>
+
+        <button id="rai-web-btn" class="header-btn" title="Visit Website">
+
+            <svg viewBox="0 0 24 24" class="header-icon">
+                <path fill="currentColor"
+                d="M12 2A10 10 0 1022 12 10 10 0 0012 2zm6.92 9h-3.06a15.7 15.7 0 00-1.2-4.12A8.03 8.03 0 0118.92 11zm-6.92-7.02A13.2 13.2 0 0114 11h-4A13.2 13.2 0 0112 3.98zM9.34 6.88A15.7 15.7 0 008.14 11H5.08a8.03 8.03 0 014.26-4.12zM5.08 13h3.06a15.7 15.7 0 001.2 4.12A8.03 8.03 0 015.08 13zm6.92 7.02A13.2 13.2 0 0110 13h4a13.2 13.2 0 01-2 7.02zm2.66-2.9A15.7 15.7 0 0015.86 13h3.06a8.03 8.03 0 01-4.26 4.12z"/>
+            </svg>
+
+        </button>
+
+        <button id="rai-close-btn" class="header-btn" title="Close">
+
+            <svg viewBox="0 0 24 24" class="header-icon">
+                <path fill="currentColor"
+                d="M18.3 5.71L12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.29l6.3 6.3 6.29-6.3z"/>
+            </svg>
+
+        </button>
+
+    </div>
+
+</div>
   <div id="ai-chat-messages"></div>
 
   <div id="ai-chat-input-area">
@@ -88,6 +142,13 @@ document.head.appendChild(markedScript);
   const sendBtn = shadow.getElementById("ai-send-btn");
   const micBtn = shadow.getElementById("ai-mic-btn");
   const msgs = shadow.getElementById("ai-chat-messages");
+  // ======================
+// HEADER BUTTONS
+// ======================
+
+const infoBtn = shadow.getElementById("rai-info-btn");
+const webBtn = shadow.getElementById("rai-web-btn");
+const closeBtn = shadow.getElementById("rai-close-btn");
 
   btn.onclick = () => {
     const open = box.style.display === "flex";
@@ -96,7 +157,93 @@ document.head.appendChild(markedScript);
       setTimeout(() => input.focus(), 300);
     }
   };
+  // Close Chat
+closeBtn.onclick = () => {
+    box.style.display = "none";
+};
 
+// Website
+webBtn.onclick = () => {
+    window.open("https://larxius.com/", "_blank");
+};
+// About Popup
+infoBtn.onclick = () => {
+
+    const existing = shadow.getElementById("rai-about-modal");
+    if(existing){
+        existing.remove();
+        return;
+    }
+
+    const modal = document.createElement("div");
+
+    modal.id = "rai-about-modal";
+
+    modal.innerHTML = `
+    <div style="
+        position:absolute;
+        top:70px;
+        right:15px;
+        width:250px;
+        background:#fff;
+        border-radius:14px;
+        box-shadow:0 10px 35px rgba(0,0,0,.25);
+        padding:18px;
+        z-index:999999;
+        font-family:Segoe UI,sans-serif;
+    ">
+
+        <div style="
+            font-size:20px;
+            font-weight:700;
+            color:#5b5ce2;
+            margin-bottom:8px;
+        ">
+            RAI Assistant
+        </div>
+
+        <div style="font-size:14px;color:#666;">
+            Version 1.0
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #eee;">
+
+        <div style="font-size:14px;">
+            Powered by
+        </div>
+
+        <div style="
+            color:#5b5ce2;
+            font-weight:600;
+            margin-top:4px;
+        ">
+            Larxius Technologies
+        </div>
+
+        <button id="rai-about-close"
+            style="
+                margin-top:18px;
+                width:100%;
+                background:#5b5ce2;
+                color:#fff;
+                border:none;
+                padding:10px;
+                border-radius:8px;
+                cursor:pointer;
+            ">
+            Close
+        </button>
+
+    </div>
+    `;
+
+    box.appendChild(modal);
+
+    shadow
+      .getElementById("rai-about-close")
+      .onclick = () => modal.remove();
+
+};
   // Initial greeting
   addBotMessage("Hi 👋 I’m RAI. How can I help you today?");
 
