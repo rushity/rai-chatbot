@@ -2,7 +2,8 @@
 // RAI CHATBOT – STRICT SHADOW DOM
 // NO FUNCTIONALITY CHANGE
 // ==============================
-
+const currentScript = document.currentScript;
+const COMPANY = currentScript?.dataset.company || "";
 (function () {
 
   // prevent double load
@@ -380,11 +381,17 @@ async function typeBotMessage(text){
     thinking.innerHTML = `<span class="rai-label">RAI</span> is thinking`;
     msgs.appendChild(thinking);
     msgs.scrollTop = msgs.scrollHeight;
-
+if (!COMPANY) {
+    addBotMessage("Configuration error: Company ID is missing.");
+    return;
+}
     fetch("https://grateful790-rai-chatbot.hf.space/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question })
+      body: JSON.stringify({
+    company: COMPANY,
+    question: question
+})
     })
       .then(res => res.json())
       .then(data => {
